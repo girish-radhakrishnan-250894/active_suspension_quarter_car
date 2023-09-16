@@ -50,6 +50,16 @@ input.z_r  = 3*[0 0 5 5 0  0  0  0  0  0  0]*1e-3; % Your equations on the speed
 
 % Synthetic Random Road Input
 
+%% Running the Simulation
+
+[t,X] = ode15s(@(t,X)active_suspension_quarter_car(t,X,input), [0 input.time(end)], X0, opts);
+
+% Output matrix initialization
+n_outputs = 3;
+O = zeros(length(t),n_outputs);
+for i=1:length(X)
+    [~, O(i,:)] = active_suspension_quarter_car(t(i),X(i,:)',input);
+end
 
 %% Plotting the Simulation Results
 

@@ -30,8 +30,8 @@ function [Qdot, f_qd_q_u, M, O] = quarter_car_model_linear(q, input, F_a, z_r)
 z_s = q(1);
 z_u = q(2);
 
-z_s_dot = q(3);
-z_u_dot = q(4);
+zs_dot = q(3);
+zu_dot = q(4);
 %% Initialization : Component 
 d_s = input.d_s;       % Ns/m
 m_s = input.m_s;       % kg
@@ -44,13 +44,13 @@ d_t = input.d_t;       % Ns/m
 %% System Dynamics
 
 M = [m_s 0;
-     0 m_u];
+     0 m_a];
 
 f_qd_q_u = [k_s*(z_u - z_s) + d_s*(zu_dot - zs_dot) + F_a - input.gravity_switch*m_s*9.81;
            -k_s*(z_u - z_s) - d_s*(zu_dot - zs_dot) - F_a - input.gravity_switch*m_a*9.81 + k_t*(z_r - z_u) + d_t*(- zu_dot)];
 
-Qdot = [z_s_dot;
-        z_u_dot;
+Qdot = [zs_dot;
+        zu_dot;
         M\f_qd_q_u
         ];
 

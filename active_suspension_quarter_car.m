@@ -46,20 +46,20 @@ z_s_ref = 0;
 
 %% Error 
 
-e_z_r = z_s_ref - (z_s - input.zs_steady_state);
+e_zs = z_s_ref - (z_s - input.zs_steady_state);
 
 %% Controller Action 
 
-y_cont = Cc_zs*Z_cont_qcar + Dc_zs*e_z_r;
-Fa = input.controller_switch * y_cont;
+y_cont = Cc_zs*Z_cont_qcar + Dc_zs*e_zs;
+F_a = input.controller_switch * y_cont;
 
 %% Quarter car system dynamics
 
-[Qdot, ~, ~, O_model] = quarter_car_model_linear(q, input, Fa, z_r);
+[Qdot, ~, ~, O_model] = quarter_car_model_linear(q, input, F_a, z_r);
 
 %% Controller Dynamics
 
-Z_dot_cont_qcar = Ac_zs*Z_cont_qcar + Bc_zs*e_z_r;
+Z_dot_cont_qcar = Ac_zs*Z_cont_qcar + Bc_zs*e_zs;
 
 %% Augmented system dynamics
 
@@ -70,9 +70,9 @@ Zdot = [Qdot;
 
 %% Outputs
 
-O_simulator = [];
-
-
+O_simulator = [e_zs;
+               Qdot(3);
+               F_a]';
 
 
 
